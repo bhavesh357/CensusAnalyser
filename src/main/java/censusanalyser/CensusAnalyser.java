@@ -51,4 +51,12 @@ public class CensusAnalyser {
             throw new CensusAnalyserException("Wrong Type of Object",CensusAnalyserException.ExceptionType.CENSUS_TYPE_PROBLEM);
         }
     }
+
+    public void loadIndiaStateCodeData(String indiaCensusCsvFilePath, Class<IndiaCensusCSV> indiaCensusCSVClass, char c) throws CensusAnalyserException {
+        if(c==','){
+            loadIndiaStateCodeData(indiaCensusCsvFilePath,indiaCensusCSVClass);
+        }else{
+            throw new CensusAnalyserException("Wrong Type of Object",CensusAnalyserException.ExceptionType.CENSUS_DELIMITER_PROBLEM);
+        }
+    }
 }
