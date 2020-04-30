@@ -43,4 +43,12 @@ public class CensusAnalyser {
                     CensusAnalyserException.ExceptionType.CENSUS_FILE_PROBLEM);
         }
     }
+
+    public <E> void loadIndiaStateCodeData(String indiaStateCodeCsvFilePath, Class<E> censusAnalyserExceptionClass) throws CensusAnalyserException {
+        if(censusAnalyserExceptionClass.equals(CSVStates.class)){
+            loadIndiaStateCodeData(indiaStateCodeCsvFilePath);
+        }else{
+            throw new CensusAnalyserException("Wrong Type of Object",CensusAnalyserException.ExceptionType.CENSUS_TYPE_PROBLEM);
+        }
+    }
 }
