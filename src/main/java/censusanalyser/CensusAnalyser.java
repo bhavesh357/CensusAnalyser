@@ -52,6 +52,24 @@ public class CensusAnalyser {
         } catch (IOException e) {
             throw new CensusAnalyserException(e.getMessage(),
                     CensusAnalyserException.ExceptionType.CENSUS_FILE_PROBLEM);
+        } catch (Exception e){
+            throw new CensusAnalyserException(e.getMessage(),CensusAnalyserException.ExceptionType.CENSUS_HEADER_PROBLEM);
+        }
+    }
+
+    public <E> void loadIndiaStateCodeData(String indiaStateCodeCsvFilePath, Class<E> censusAnalyserExceptionClass) throws CensusAnalyserException {
+        if(censusAnalyserExceptionClass.equals(CSVStates.class)){
+            loadIndiaStateCodeData(indiaStateCodeCsvFilePath);
+        }else{
+            throw new CensusAnalyserException("Wrong Type of Object",CensusAnalyserException.ExceptionType.CENSUS_TYPE_PROBLEM);
+        }
+    }
+
+    public void loadIndiaStateCodeData(String indiaCensusCsvFilePath, Class<IndiaCensusCSV> indiaCensusCSVClass, char c) throws CensusAnalyserException {
+        if(c==','){
+            loadIndiaStateCodeData(indiaCensusCsvFilePath,indiaCensusCSVClass);
+        }else{
+            throw new CensusAnalyserException("Wrong Type of Object",CensusAnalyserException.ExceptionType.CENSUS_DELIMITER_PROBLEM);
         }
     }
 
