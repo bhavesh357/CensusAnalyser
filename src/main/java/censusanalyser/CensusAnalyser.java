@@ -20,7 +20,26 @@ public class CensusAnalyser {
             return namOfEateries;
         } catch (IOException e) {
             throw new CensusAnalyserException(e.getMessage(),
-                    CensusAnalyserException.ExceptionType.CENSUS_FILE_PROBLEM);
+                                              CensusAnalyserException.ExceptionType.CENSUS_FILE_PROBLEM);
+        } catch(Exception e){
+            throw  new CensusAnalyserException(e.getMessage(),
+                                              CensusAnalyserException.ExceptionType.CENSUS_HEADER_PROBLEM);
+        }
+    }
+
+    public <E> void loadIndiaCensusData(String indiaCensusCsvFilePath, Class<E> indiaCensusCSVClass) throws CensusAnalyserException {
+        if(indiaCensusCSVClass.equals(IndiaCensusCSV.class)){
+           loadIndiaCensusData(indiaCensusCsvFilePath);
+        }else{
+            throw new CensusAnalyserException("Wrong Type of Object",CensusAnalyserException.ExceptionType.CENSUS_TYPE_PROBLEM);
+        }
+    }
+
+    public <E> void loadIndiaCensusData(String indiaCensusCsvFilePath, Class<E> indiaCensusCSVClass, char c) throws CensusAnalyserException {
+        if(c==','){
+            loadIndiaCensusData(indiaCensusCsvFilePath,indiaCensusCSVClass);
+        }else{
+            throw new CensusAnalyserException("Wrong Type of Delimiter",CensusAnalyserException.ExceptionType.CENSUS_DELIMITER_PROBLEM);
         }
     }
     public int loadIndiaStateCodeData(String csvFilePath) throws CensusAnalyserException {
