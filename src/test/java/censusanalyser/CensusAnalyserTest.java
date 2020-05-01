@@ -94,7 +94,7 @@ public class CensusAnalyserTest {
             CensusAnalyser censusAnalyser = new CensusAnalyser();
             ExpectedException exceptionRule = ExpectedException.none();
             exceptionRule.expect(CensusAnalyserException.class);
-            censusAnalyser.loadIndiaStateCodeData(INDIA_STATE_CODE_CSV_FILE_PATH,IndiaCensusCSV.class,'.');
+            censusAnalyser.loadIndiaStateCodeData(INDIA_STATE_CODE_CSV_FILE_PATH,CSVStates.class,'.');
         }catch (CensusAnalyserException e){
             Assert.assertEquals(CensusAnalyserException.ExceptionType.CENSUS_DELIMITER_PROBLEM,e.type);
         }

@@ -1,6 +1,6 @@
 package censusanalyser;
 
-public class CensusAnalyserException extends Exception {
+public class CensusAnalyserException extends RuntimeException {
 
 
 
