@@ -118,6 +118,16 @@ public class CensusAnalyser<E>{
         return json;
     }
 
+    public String getAreaWiseSortedCensusData() {
+        if(censusCSVList == null || censusCSVList.size()==0){
+            throw new CensusAnalyserException("No Census Data",CensusAnalyserException.ExceptionType.NO_CENSUS_DATA);
+        }
+        Comparator<IndiaCensusCSV> comparing = Comparator.comparing(census -> census.areaInSqKm);
+        this.sortDescending(comparing);
+        String json = new Gson().toJson(censusCSVList);
+        return json;
+    }
+
     public String getStateCodeWiseSortedCensusData() {
         if(censusStateList == null || censusStateList.size()==0){
             throw new CensusAnalyserException("No Census Data",CensusAnalyserException.ExceptionType.NO_CENSUS_DATA);
@@ -127,6 +137,7 @@ public class CensusAnalyser<E>{
         String json = new Gson().toJson(censusStateList);
         return json;
     }
+
 
     private void sortStates(Comparator<CSVStates> comparing) {
         for(int i=0;i< censusStateList.size()-1;i++){
@@ -166,6 +177,5 @@ public class CensusAnalyser<E>{
             }
         }
     }
-
 
 }
