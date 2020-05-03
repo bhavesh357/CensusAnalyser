@@ -86,12 +86,6 @@ public class CensusAnalyser<E>{
         }
     }
 
-    public <E> int getCount(Iterator<E> censusCSVIterator){
-        Iterable<E> csvIterable=() ->censusCSVIterator;
-        return (int) StreamSupport.stream(csvIterable.spliterator(),false).count();
-    }
-
-
     public String getStateWiseSortedCensusData() {
         if(censusCSVList == null || censusCSVList.size()==0){
             throw new CensusAnalyserException("No Census Data",CensusAnalyserException.ExceptionType.NO_CENSUS_DATA);
