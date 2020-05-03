@@ -15,6 +15,7 @@ import java.util.stream.StreamSupport;
 
 public class CensusAnalyser<E>{
     List<IndiaCensusCSV> censusCSVList=null;
+    List<CSVStates> censusStateList=null;
 
     public int loadIndiaCensusData(String csvFilePath,Class<E> indiaCensusCSVClass,char c) throws CensusAnalyserException {
         try {
@@ -52,8 +53,8 @@ public class CensusAnalyser<E>{
             checkSeparator(c);
             Reader reader = Files.newBufferedReader(Paths.get(csvFilePath));
             ICSVBuilder csvBuilder = CSVBuilderFactory.createCSVBuilder();
-            List<CSVStates> censusCSVList = csvBuilder.getCSVFileList(reader,CSVStates.class);
-            return censusCSVList.size();
+            censusStateList = csvBuilder.getCSVFileList(reader,CSVStates.class);
+            return censusStateList.size();
         } catch (IOException e) {
             throw new CensusAnalyserException(e.getMessage(),
                     CensusAnalyserException.ExceptionType.CENSUS_FILE_PROBLEM);
@@ -96,6 +97,30 @@ public class CensusAnalyser<E>{
         return json;
     }
 
+
+    public String getStateCodeWiseSortedCensusData() {
+        if(censusStateList == null || censusStateList.size()==0){
+            throw new CensusAnalyserException("No Census Data",CensusAnalyserException.ExceptionType.NO_CENSUS_DATA);
+        }
+        Comparator<CSVStates> comparing = Comparator.comparing(census -> census.stateCode);
+        this.sortStates(comparing);
+        String json = new Gson().toJson(censusStateList);
+        return json;
+    }
+
+    private void sortStates(Comparator<CSVStates> comparing) {
+        for(int i=0;i< censusStateList.size()-1;i++){
+            for(int j=0; j < censusStateList.size()-i-1 ;j++){
+                CSVStates census1= censusStateList.get(j);
+                CSVStates census2 = censusStateList.get(j+1);
+                if(comparing.compare(census1,census2)>0){
+                    censusStateList.set(j,census2);
+                    censusStateList.set(j+1,census1);
+                }
+            }
+        }
+    }
+
     private void sort(Comparator<IndiaCensusCSV> comparing) {
         for(int i=0;i< censusCSVList.size()-1;i++){
             for(int j=0; j < censusCSVList.size()-i-1 ;j++){
@@ -108,4 +133,5 @@ public class CensusAnalyser<E>{
             }
         }
     }
+
 }
