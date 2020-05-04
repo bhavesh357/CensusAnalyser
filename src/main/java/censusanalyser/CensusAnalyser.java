@@ -17,6 +17,12 @@ public class CensusAnalyser<E>{
     Map<String,CSVStates> censusStateMap=null;
     List<CSVStates> censusStateList=new ArrayList<CSVStates>();
 
+    public int[] loadData(String filePathForCensus,Class<E> type1,char c1,String filePathForState,Class<E> type2,char c2){
+        int[] sizes = new int[2];
+        sizes[0] = loadIndiaCensusData(filePathForCensus,type1,c1);
+        sizes[1] = loadIndiaStateCodeData(filePathForState,type2,c2);
+        return sizes;
+    }
     public int loadIndiaCensusData(String csvFilePath,Class<E> indiaCensusCSVClass,char c) throws CensusAnalyserException {
         try {
             checkType((Class<E>) IndiaCensusCSV.class,indiaCensusCSVClass);
@@ -161,4 +167,11 @@ public class CensusAnalyser<E>{
         }
     }
 
+    public int[] loadData(String filePath1, Class<E> type1, String filePath2, Class<E> type2) {
+        return loadData(filePath1,type1,',',filePath2,type2,',');
+    }
+
+    public int[] loadData(String filePath1, String filePath2) {
+        return loadData(filePath1,(Class<E>) IndiaCensusCSV.class,',',filePath2,(Class<E>) CSVStates.class,',');
+    }
 }
