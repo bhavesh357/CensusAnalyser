@@ -8,14 +8,14 @@ import java.io.IOException;
 import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 import java.util.stream.StreamSupport;
 
 public class CensusAnalyser<E>{
-    List<IndiaCensusCSV> censusCSVList=null;
-    List<CSVStates> censusStateList=null;
+    Map<String,IndiaCensusCSV> censusCSVMap=null;
+    List<IndiaCensusCSV> censusCSVList=new ArrayList<IndiaCensusCSV>();
+    Map<String,CSVStates> censusStateMap=null;
+    List<CSVStates> censusStateList=new ArrayList<CSVStates>();
 
     public int loadIndiaCensusData(String csvFilePath,Class<E> indiaCensusCSVClass,char c) throws CensusAnalyserException {
         try {
@@ -23,8 +23,10 @@ public class CensusAnalyser<E>{
             checkSeparator(c);
             Reader reader = Files.newBufferedReader(Paths.get(csvFilePath));
             ICSVBuilder csvBuilder = CSVBuilderFactory.createCSVBuilder();
-            censusCSVList = csvBuilder.getCSVFileList(reader,IndiaCensusCSV.class);
-            return censusCSVList.size();
+            censusCSVMap = csvBuilder.getCSVFileMapCensus(reader,IndiaCensusCSV.class);
+            Collection<IndiaCensusCSV> values = censusCSVMap.values();
+            censusCSVList.addAll(values);
+            return censusCSVMap.size();
         } catch (IOException e) {
             throw new CensusAnalyserException(e.getMessage(),
                                               CensusAnalyserException.ExceptionType.CENSUS_FILE_PROBLEM);
@@ -53,7 +55,8 @@ public class CensusAnalyser<E>{
             checkSeparator(c);
             Reader reader = Files.newBufferedReader(Paths.get(csvFilePath));
             ICSVBuilder csvBuilder = CSVBuilderFactory.createCSVBuilder();
-            censusStateList = csvBuilder.getCSVFileList(reader,CSVStates.class);
+            censusStateMap = csvBuilder.getCSVFileMapState(reader,CSVStates.class);
+            censusStateList.addAll(censusStateMap.values());
             return censusStateList.size();
         } catch (IOException e) {
             throw new CensusAnalyserException(e.getMessage(),
