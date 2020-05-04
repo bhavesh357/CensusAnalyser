@@ -44,7 +44,6 @@ public class CensusAnalyserTest {
             Assert.assertEquals(37,numOfRecords[1]);
         } catch (CensusAnalyserException e) { }
     }
-
     @Test
     public void givenIndiaCensusData_WithWrongType_ShouldThrowException() {
         try {
