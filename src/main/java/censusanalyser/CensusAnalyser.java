@@ -12,12 +12,17 @@ import java.util.*;
 import java.util.stream.StreamSupport;
 
 public class CensusAnalyser<E>{
-    Map<String,IndiaCensusCSV> censusCSVMap=null;
+    Map<String,IndiaCensusCSV> censusCSVMap=new HashMap<String, IndiaCensusCSV>();
     List<IndiaCensusCSV> censusCSVList=new ArrayList<IndiaCensusCSV>();
-    Map<String,CSVStates> censusStateMap=null;
-    List<CSVStates> censusStateList=new ArrayList<CSVStates>();
+    Map<String,CSVStatesDAO> censusStateMap=null;
+    List<CSVStatesDAO> censusList=null;
 
-    public int[] loadData(String filePathForCensus,Class<E> type1,char c1,String filePathForState,Class<E> type2,char c2){
+    public CensusAnalyser() {
+        censusList=new ArrayList<CSVStatesDAO>();
+        censusStateMap = new HashMap<String, CSVStatesDAO>();
+    }
+
+    public int[] loadData(String filePathForCensus, Class<E> type1, char c1, String filePathForState, Class<E> type2, char c2){
         int[] sizes = new int[2];
         sizes[0] = loadIndiaCensusData(filePathForCensus,type1,c1);
         sizes[1] = loadIndiaStateCodeData(filePathForState,type2,c2);
@@ -61,9 +66,18 @@ public class CensusAnalyser<E>{
             checkSeparator(c);
             Reader reader = Files.newBufferedReader(Paths.get(csvFilePath));
             ICSVBuilder csvBuilder = CSVBuilderFactory.createCSVBuilder();
+            /*
             censusStateMap = csvBuilder.getCSVFileMapState(reader,CSVStates.class);
-            censusStateList.addAll(censusStateMap.values());
-            return censusStateList.size();
+            censusList.addAll(censusStateMap.values());
+             */
+            Iterator<CSVStates> csvFileIterator = csvBuilder.getCSVFileIterator(reader, CSVStates.class);
+            while (csvFileIterator.hasNext()){
+                CSVStates next = csvFileIterator.next();
+                CSVStatesDAO csvStatesDAO = new CSVStatesDAO(next);
+                this.censusStateMap.put(next.state,csvStatesDAO);
+                this.censusList.add(csvStatesDAO);
+            }
+            return censusList.size();
         } catch (IOException e) {
             throw new CensusAnalyserException(e.getMessage(),
                     CensusAnalyserException.ExceptionType.CENSUS_FILE_PROBLEM);
@@ -90,7 +104,7 @@ public class CensusAnalyser<E>{
         }
     }
 
-    public <E> void checkSeparator(char c) throws CensusAnalyserException {
+    public void checkSeparator(char c) throws CensusAnalyserException {
         if(c!=','){
             throw new CensusAnalyserException("Wrong Type of Delimiter",CensusAnalyserException.ExceptionType.CENSUS_DELIMITER_PROBLEM);
         }
@@ -124,10 +138,10 @@ public class CensusAnalyser<E>{
     }
 
     public String getStateCodeWiseSortedCensusData() {
-        checkIfNull(censusStateList);
-        Comparator<CSVStates> comparing = Comparator.comparing(census -> census.stateCode);
-        this.sort(comparing,censusStateList);
-        return getJson(censusStateList);
+        checkIfNull(censusList);
+        Comparator<CSVStatesDAO> comparing = Comparator.comparing(census -> census.stateCode);
+        this.sort(comparing,censusList);
+        return getJson(censusList);
     }
 
     private void checkIfNull(List list){
