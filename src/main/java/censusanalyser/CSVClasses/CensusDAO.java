@@ -21,4 +21,9 @@ public class CensusDAO{
         this.population=census.population;
         this.density=census.populationDensity;
     }
+
+    public CensusDAO(CSVStates census) {
+        this.state=census.state;
+        this.stateId=census.stateCode;
+    }
 }

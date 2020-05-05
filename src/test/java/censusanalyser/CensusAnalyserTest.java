@@ -196,9 +196,9 @@ public class CensusAnalyserTest {
     }
 
     @Test
-    public void givenCensusData_ShouldReturnCorrectRecords() {
+    public void givenUSCensusData_ShouldReturnCorrectRecords() {
         CensusAnalyser censusAnalyser = new CensusAnalyser();
-        int count = censusAnalyser.loadUSSensusData(US_CENSUS_CSV_FILE_PATH);
+        int count = censusAnalyser.loadUSCensusData(US_CENSUS_CSV_FILE_PATH);
         Assert.assertEquals(51,count);
     }
 }
