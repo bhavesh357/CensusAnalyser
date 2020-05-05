@@ -9,6 +9,7 @@ import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 public class CensusAnalyser<E>{
@@ -71,6 +72,8 @@ public class CensusAnalyser<E>{
             censusList.addAll(censusStateMap.values());
              */
             Iterator<CSVStates> csvFileIterator = csvBuilder.getCSVFileIterator(reader, CSVStates.class);
+            Iterable<CSVStates> csvStatesIterable =() ->csvFileIterator;
+            Stream<CSVStates> stream = StreamSupport.stream(csvStatesIterable.spliterator(), false);
             while (csvFileIterator.hasNext()){
                 CSVStates next = csvFileIterator.next();
                 CSVStatesDAO csvStatesDAO = new CSVStatesDAO(next);
@@ -113,34 +116,34 @@ public class CensusAnalyser<E>{
     public String getStateWiseSortedCensusData() {
         checkIfNull(censusCSVList);
         Comparator<IndiaCensusCSV> comparing = Comparator.comparing(census -> census.state);
-        this.sort(comparing,censusCSVList);
+        this.sort(comparing,censusCSVList,true);
         return getJson(censusCSVList);
     }
     public String getPopulationWiseSortedCensusData() {
         checkIfNull(censusCSVList);
         Comparator<IndiaCensusCSV> comparing = Comparator.comparing(census -> census.population);
-        this.sortDescending(comparing);
+        this.sort(comparing,censusCSVList,false);
         return getJson(censusCSVList);
     }
 
     public String getPopulationDensityWiseSortedCensusData() {
         checkIfNull(censusCSVList);
         Comparator<IndiaCensusCSV> comparing = Comparator.comparing(census -> census.densityPerSqKm);
-        this.sortDescending(comparing);
+        this.sort(comparing,censusCSVList,false);
         return getJson(censusCSVList);
     }
 
     public String getAreaWiseSortedCensusData() {
         checkIfNull(censusCSVList);
         Comparator<IndiaCensusCSV> comparing = Comparator.comparing(census -> census.areaInSqKm);
-        this.sortDescending(comparing);
+        this.sort(comparing,censusCSVList,false);
         return getJson(censusCSVList);
     }
 
     public String getStateCodeWiseSortedCensusData() {
         checkIfNull(censusList);
         Comparator<CSVStatesDAO> comparing = Comparator.comparing(census -> census.stateCode);
-        this.sort(comparing,censusList);
+        this.sort(comparing,censusList,true);
         return getJson(censusList);
     }
 
@@ -155,27 +158,21 @@ public class CensusAnalyser<E>{
         return json;
     }
 
-    private void sort(Comparator comparing,List list) {
+    private void sort(Comparator comparing,List list,boolean isAscending) {
         for(int i=0;i< list.size()-1;i++){
             for(int j=0; j < list.size()-i-1 ;j++){
                 Object census1= list.get(j);
                 Object  census2 = list.get(j+1);
-                if(comparing.compare(census1,census2)>0){
-                    list.set(j,census2);
-                    list.set(j+1,census1);
-                }
-            }
-        }
-    }
-
-    private void sortDescending(Comparator<IndiaCensusCSV> comparing) {
-        for(int i=0;i< censusCSVList.size()-1;i++){
-            for(int j=0; j < censusCSVList.size()-i-1 ;j++){
-                IndiaCensusCSV census1= censusCSVList.get(j);
-                IndiaCensusCSV census2 = censusCSVList.get(j+1);
-                if(comparing.compare(census1,census2)<0){
-                    censusCSVList.set(j,census2);
-                    censusCSVList.set(j+1,census1);
+                if(isAscending==true){
+                    if(comparing.compare(census1,census2)>0){
+                        list.set(j,census2);
+                        list.set(j+1,census1);
+                    }
+                }else {
+                    if (comparing.compare(census1, census2) < 0) {
+                        list.set(j, census2);
+                        list.set(j + 1, census1);
+                    }
                 }
             }
         }
