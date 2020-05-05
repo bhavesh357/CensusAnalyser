@@ -1,4 +1,4 @@
-package censusanalyser;
+package censusanalyser.CSVClasses;
 
 import censusanalyser.CSVClasses.CSVStates;
 

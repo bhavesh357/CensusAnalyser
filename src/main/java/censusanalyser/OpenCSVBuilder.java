@@ -21,6 +21,7 @@ public class OpenCSVBuilder <E> implements ICSVBuilder{
         }
     }
 
+    /*
     @Override
     public List getCSVFileList(Reader reader, Class className) {
         try{
@@ -58,6 +59,7 @@ public class OpenCSVBuilder <E> implements ICSVBuilder{
             throw new CSVBuilderException(e.getMessage(),CSVBuilderException.ExceptionType.CENSUS_HEADER_PROBLEM);
         }
     }
+    */
 
     private CsvToBean getCsvToBean(Reader reader, Class className) {
         try{
@@ -66,7 +68,7 @@ public class OpenCSVBuilder <E> implements ICSVBuilder{
                     .withIgnoreLeadingWhiteSpace(true)
                     .withSeparator(',')
                     .build();
-        }catch (Exception e){
+        }catch (RuntimeException e){
             throw new CSVBuilderException(e.getMessage(),CSVBuilderException.ExceptionType.CENSUS_HEADER_PROBLEM);
         }
     }
