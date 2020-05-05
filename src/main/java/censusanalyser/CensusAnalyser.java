@@ -1,8 +1,10 @@
 package censusanalyser;
 
+import censusanalyser.CSVClasses.CSVStates;
+import censusanalyser.CSVClasses.IndiaCensusCSV;
+import censusanalyser.exception.CSVBuilderException;
+import censusanalyser.exception.CensusAnalyserException;
 import com.google.gson.Gson;
-import com.opencsv.bean.CsvToBean;
-import com.opencsv.bean.CsvToBeanBuilder;
 
 import java.io.IOException;
 import java.io.Reader;
@@ -13,7 +15,7 @@ import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 public class CensusAnalyser<E>{
-    Map<String,IndiaCensusCSV> censusCSVMap=new HashMap<String, IndiaCensusCSV>();
+    Map<String, IndiaCensusCSV> censusCSVMap=new HashMap<String, IndiaCensusCSV>();
     List<IndiaCensusCSV> censusCSVList=new ArrayList<IndiaCensusCSV>();
     Map<String,CSVStatesDAO> censusStateMap=null;
     List<CSVStatesDAO> censusList=null;

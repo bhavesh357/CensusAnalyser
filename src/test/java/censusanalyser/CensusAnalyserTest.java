@@ -1,11 +1,12 @@
 package censusanalyser;
 
+import censusanalyser.CSVClasses.CSVStates;
+import censusanalyser.CSVClasses.IndiaCensusCSV;
+import censusanalyser.exception.CensusAnalyserException;
 import com.google.gson.Gson;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
-
-import java.lang.reflect.Type;
 
 public class CensusAnalyserTest {
 
@@ -44,13 +45,15 @@ public class CensusAnalyserTest {
             Assert.assertEquals(37,numOfRecords[1]);
         } catch (CensusAnalyserException e) { }
     }
+
+
     @Test
     public void givenIndiaCensusData_WithWrongType_ShouldThrowException() {
         try {
             CensusAnalyser censusAnalyser = new CensusAnalyser();
             ExpectedException exceptionRule = ExpectedException.none();
             exceptionRule.expect(CensusAnalyserException.class);
-            censusAnalyser.loadData(INDIA_CENSUS_CSV_FILE_PATH,CensusAnalyserException.class,INDIA_STATE_CODE_CSV_FILE_PATH,CSVStates.class);
+            censusAnalyser.loadData(INDIA_CENSUS_CSV_FILE_PATH,CensusAnalyserException.class,INDIA_STATE_CODE_CSV_FILE_PATH, CSVStates.class);
         }catch (CensusAnalyserException e){
             Assert.assertEquals(CensusAnalyserException.ExceptionType.CENSUS_TYPE_PROBLEM,e.type);
         }
@@ -62,7 +65,7 @@ public class CensusAnalyserTest {
             CensusAnalyser censusAnalyser = new CensusAnalyser();
             ExpectedException exceptionRule = ExpectedException.none();
             exceptionRule.expect(CensusAnalyserException.class);
-            censusAnalyser.loadData(INDIA_CENSUS_CSV_FILE_PATH,IndiaCensusCSV.class,'.',INDIA_STATE_CODE_CSV_FILE_PATH,CSVStates.class,',');
+            censusAnalyser.loadData(INDIA_CENSUS_CSV_FILE_PATH, IndiaCensusCSV.class,'.',INDIA_STATE_CODE_CSV_FILE_PATH,CSVStates.class,',');
         }catch (CensusAnalyserException e){
             Assert.assertEquals(CensusAnalyserException.ExceptionType.CENSUS_DELIMITER_PROBLEM,e.type);
         }
@@ -124,6 +127,8 @@ public class CensusAnalyserTest {
             Assert.assertEquals(CensusAnalyserException.ExceptionType.CENSUS_FILE_PROBLEM,e.type);
         }
     }
+
+
 
     @Test
     public void givenIndianCensusData_WhenSortedOnState_ShouldReturnSortedResult() {

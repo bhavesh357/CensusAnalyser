@@ -1,5 +1,7 @@
 package censusanalyser;
-
+import censusanalyser.CSVClasses.CSVStates;
+import censusanalyser.CSVClasses.IndiaCensusCSV;
+import censusanalyser.exception.CSVBuilderException;
 import com.opencsv.bean.CsvToBean;
 import com.opencsv.bean.CsvToBeanBuilder;
 
@@ -9,7 +11,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-public class OpenCSVBuilder <E extends CSVClass> implements ICSVBuilder{
+public class OpenCSVBuilder <E> implements ICSVBuilder{
     @Override
     public Iterator getCSVFileIterator(Reader reader, Class csvStatesClass){
         try{
@@ -64,7 +66,7 @@ public class OpenCSVBuilder <E extends CSVClass> implements ICSVBuilder{
                     .withIgnoreLeadingWhiteSpace(true)
                     .withSeparator(',')
                     .build();
-        }catch (RuntimeException e){
+        }catch (Exception e){
             throw new CSVBuilderException(e.getMessage(),CSVBuilderException.ExceptionType.CENSUS_HEADER_PROBLEM);
         }
     }
