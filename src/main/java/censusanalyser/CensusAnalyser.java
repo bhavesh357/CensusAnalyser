@@ -39,14 +39,20 @@ public class CensusAnalyser<E>{
 
     private <E> int loadCensusData(String csvFilePath, Class<E> censusCSVClass,char c) {
         try {
-            //checkType((Class<E>) IndiaCensusCSV.class,(Class<E>) censusCSVClass);
+            String name = censusCSVClass.getName();
+            if(name.equals("censusanalyser.CSVClasses.IndiaCensusCSV")) {
+                checkType(IndiaCensusCSV.class, (Class<E>) censusCSVClass);
+            }else if(name.equals("censusanalyser.CSVClasses.USCensusCSV")) {
+                checkType(USCensusCSV.class, (Class<E>) censusCSVClass);
+            }else{
+                throw new CensusAnalyserException("Wrong Type of Object",CensusAnalyserException.ExceptionType.CENSUS_TYPE_PROBLEM);
+            }
             checkSeparator(c);
             Reader reader = Files.newBufferedReader(Paths.get(csvFilePath));
             ICSVBuilder csvBuilder = CSVBuilderFactory.createCSVBuilder();
             Iterator<E> csvFileIterator = csvBuilder.getCSVFileIterator(reader, censusCSVClass);
             Iterable<E> csvStatesIterable =() ->csvFileIterator;
             Stream<E> stream = StreamSupport.stream(csvStatesIterable.spliterator(), false);
-            String name = censusCSVClass.getName();
             if(name.equals("censusanalyser.CSVClasses.IndiaCensusCSV")){
                 Stream<IndiaCensusCSV> streamIndia = stream.map(IndiaCensusCSV.class::cast);
                 streamIndia.forEach(censusCSV -> censusCSVMap.put(censusCSV.state,new CensusDAO(censusCSV)));
@@ -90,7 +96,7 @@ public class CensusAnalyser<E>{
     }
 
 
-    public void checkType(Class<E> expected,Class<E> indiaCensusCSVClass) throws CensusAnalyserException {
+    public void checkType(Class expected,Class indiaCensusCSVClass) throws CensusAnalyserException {
         if(!indiaCensusCSVClass.equals(expected)){
             throw new CensusAnalyserException("Wrong Type of Object",CensusAnalyserException.ExceptionType.CENSUS_TYPE_PROBLEM);
         }
