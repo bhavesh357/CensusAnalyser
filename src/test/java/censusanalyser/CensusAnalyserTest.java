@@ -2,6 +2,7 @@ package censusanalyser;
 
 import censusanalyser.CSVClasses.CSVStates;
 import censusanalyser.CSVClasses.IndiaCensusCSV;
+import censusanalyser.CSVClasses.USCensusCSV;
 import censusanalyser.exception.CensusAnalyserException;
 import com.google.gson.Gson;
 import org.junit.Assert;
@@ -201,4 +202,18 @@ public class CensusAnalyserTest {
         int count = censusAnalyser.loadUSCensusData(US_CENSUS_CSV_FILE_PATH);
         Assert.assertEquals(51,count);
     }
+
+    @Test
+    public void givenUSCensusData_WhenSortedOnPopulation_ShouldReturnSortedResult() {
+        try {
+            CensusAnalyser censusAnalyser = new CensusAnalyser();
+            censusAnalyser.loadUSCensusData(US_CENSUS_CSV_FILE_PATH);
+            String sortedCensusData = censusAnalyser.getPopulationWiseSortedCensusData();
+            USCensusCSV[] censusCSV = new Gson().fromJson(sortedCensusData, USCensusCSV[].class);
+            Assert.assertEquals("California", censusCSV[0].state);
+        }catch (CensusAnalyserException e){
+
+        }
+    }
+
 }
