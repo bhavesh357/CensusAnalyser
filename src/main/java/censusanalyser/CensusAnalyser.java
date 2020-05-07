@@ -17,7 +17,7 @@ public class CensusAnalyser<E>{
     }
 
     public int loadIndiaCensusData(Class indiaCensusCSVClass, char c, String... csvFilePath) throws CensusAnalyserException {
-        censusCSVMap=new CensusLoader().loadCensusData(indiaCensusCSVClass,c,csvFilePath);
+        censusCSVMap=CensusAdapterFactory.getCensusData(CensusAdapter.TYPE.INDIA,indiaCensusCSVClass,c,csvFilePath);
         censusCSVList.addAll(censusCSVMap.values());
         return censusCSVMap.size();
     }
@@ -31,13 +31,13 @@ public class CensusAnalyser<E>{
     }
 
     public int loadUSCensusData(String csvFilePath) {
-        censusCSVMap= new CensusLoader().loadCensusData(USCensusCSV.class,',',csvFilePath);
+        censusCSVMap= CensusAdapterFactory.getCensusData(CensusAdapter.TYPE.US,USCensusCSV.class,',',csvFilePath);
         censusCSVList.addAll(censusCSVMap.values());
         return censusCSVMap.size();
     }
 
     public int loadIndiaStateCodeData(Class<E> indiaCensusCSVClass,char c,String csvFilePath) throws CensusAnalyserException {
-        censusCSVMap= new CensusLoader().loadCensusData(CSVStates.class,',',csvFilePath);
+        censusCSVMap= CensusAdapterFactory.getCensusData(CensusAdapter.TYPE.INDIA_STATE,CSVStates.class,',',csvFilePath);
         censusCSVList.addAll(censusCSVMap.values());
         return censusCSVMap.size();
     }
