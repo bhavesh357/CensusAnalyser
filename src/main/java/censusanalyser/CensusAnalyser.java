@@ -1,17 +1,10 @@
 package censusanalyser;
 
-import censusanalyser.CSVClasses.*;
-import censusanalyser.exception.CSVBuilderException;
+import censusanalyser.model.*;
 import censusanalyser.exception.CensusAnalyserException;
 import com.google.gson.Gson;
 
-import java.io.IOException;
-import java.io.Reader;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.*;
-import java.util.stream.Stream;
-import java.util.stream.StreamSupport;
 
 public class CensusAnalyser<E>{
 

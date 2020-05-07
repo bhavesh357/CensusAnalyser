@@ -1,9 +1,9 @@
 package censusanalyser;
 
-import censusanalyser.CSVClasses.CSVStates;
-import censusanalyser.CSVClasses.CensusDAO;
-import censusanalyser.CSVClasses.IndiaCensusCSV;
-import censusanalyser.CSVClasses.USCensusCSV;
+import censusanalyser.model.CSVStates;
+import censusanalyser.model.CensusDAO;
+import censusanalyser.model.IndiaCensusCSV;
+import censusanalyser.model.USCensusCSV;
 import censusanalyser.exception.CSVBuilderException;
 import censusanalyser.exception.CensusAnalyserException;
 
@@ -27,11 +27,11 @@ public class CensusLoader {
     public <E> Map<String, CensusDAO> loadCensusData(Class<E> censusCSVClass, char c, String... csvFilePath) {
         try {
             String name = censusCSVClass.getName();
-            if(name.equals("censusanalyser.CSVClasses.IndiaCensusCSV")) {
+            if(name.equals("censusanalyser.model.IndiaCensusCSV")) {
                 checkType(IndiaCensusCSV.class, (Class<E>) censusCSVClass);
-            }else if(name.equals("censusanalyser.CSVClasses.USCensusCSV")) {
+            }else if(name.equals("censusanalyser.model.USCensusCSV")) {
                 checkType(USCensusCSV.class, (Class<E>) censusCSVClass);
-            }else if(name.equals("censusanalyser.CSVClasses.CSVStates")) {
+            }else if(name.equals("censusanalyser.model.CSVStates")) {
                 checkType(CSVStates.class, (Class<E>) censusCSVClass);
             }else{
                 throw new CensusAnalyserException("Wrong Type of Object",CensusAnalyserException.ExceptionType.CENSUS_TYPE_PROBLEM);
@@ -42,11 +42,14 @@ public class CensusLoader {
             Iterator<E> csvFileIterator = csvBuilder.getCSVFileIterator(reader, censusCSVClass);
             Iterable<E> csvStatesIterable =() ->csvFileIterator;
             Stream<E> stream = StreamSupport.stream(csvStatesIterable.spliterator(), false);
-            if(name.equals("censusanalyser.CSVClasses.IndiaCensusCSV")){
+            if(name.equals("censusanalyser.model.IndiaCensusCSV")){
                 Stream<IndiaCensusCSV> streamIndia = stream.map(IndiaCensusCSV.class::cast);
                 streamIndia.forEach(censusCSV -> censusCSVMap.put(censusCSV.state,new CensusDAO(censusCSV)));
-            }else if(name.equals("censusanalyser.CSVClasses.USCensusCSV")){
+            }else if(name.equals("censusanalyser.model.USCensusCSV")){
                 Stream<USCensusCSV> streamIndia = stream.map(USCensusCSV.class::cast);
+                streamIndia.forEach(censusCSV -> censusCSVMap.put(censusCSV.state,new CensusDAO(censusCSV)));
+            }else if(name.equals("censusanalyser.model.CSVStates")){
+                Stream<CSVStates> streamIndia = stream.map(CSVStates.class::cast);
                 streamIndia.forEach(censusCSV -> censusCSVMap.put(censusCSV.state,new CensusDAO(censusCSV)));
             }
             if(csvFilePath.length==1){

@@ -1,4 +1,4 @@
-package censusanalyser.CSVClasses;
+package censusanalyser.model;
 
 public class CensusDAO{
     public double area;
