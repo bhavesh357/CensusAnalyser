@@ -10,12 +10,8 @@ public class CensusAnalyser<E>{
 
     Map<String, CensusDAO> censusCSVMap=null;
     List<CensusDAO> censusCSVList=null;
-    Map<String, CensusDAO> censusStateMap=null;
-    List<CensusDAO> censusList=null;
 
     public CensusAnalyser() {
-        censusList=new ArrayList<CensusDAO>();
-        censusStateMap = new HashMap<String, CensusDAO>();
         censusCSVMap=new HashMap<String, CensusDAO>();
         censusCSVList=new ArrayList<CensusDAO>();
     }
