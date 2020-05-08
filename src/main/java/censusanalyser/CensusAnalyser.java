@@ -21,7 +21,6 @@ public class CensusAnalyser<E>{
     public int loadIndiaCensusData(Class indiaCensusCSVClass, char c, String... csvFilePath) throws CensusAnalyserException {
         type= CensusAdapter.TYPE.INDIA;
         censusCSVMap=CensusAdapterFactory.getCensusData(type,indiaCensusCSVClass,c,csvFilePath);
-        censusCSVList.addAll(censusCSVMap.values());
         return censusCSVMap.size();
     }
 
@@ -36,23 +35,21 @@ public class CensusAnalyser<E>{
     public int loadUSCensusData(String csvFilePath) {
         type= CensusAdapter.TYPE.US;
         censusCSVMap= CensusAdapterFactory.getCensusData(type,USCensusCSV.class,',',csvFilePath);
-        censusCSVList.addAll(censusCSVMap.values());
         return censusCSVMap.size();
     }
 
-    public int loadIndiaStateCodeData(Class<E> indiaCensusCSVClass,char c,String csvFilePath) throws CensusAnalyserException {
+    public int loadIndiaStateCodeData(Class indiaCensusCSVClass,char c,String... csvFilePath) throws CensusAnalyserException {
         type= CensusAdapter.TYPE.INDIA_STATE;
-        censusCSVMap= CensusAdapterFactory.getCensusData(type,CSVStates.class,c,csvFilePath);
-        censusCSVList.addAll(censusCSVMap.values());
+        censusCSVMap= CensusAdapterFactory.getCensusData(type,indiaCensusCSVClass,c,csvFilePath);
         return censusCSVMap.size();
     }
 
     public int loadIndiaStateCodeData(Class indiaCensusCSVClass,String... csvFilePath){
-        return loadIndiaCensusData(indiaCensusCSVClass,',',csvFilePath);
+        return loadIndiaStateCodeData(indiaCensusCSVClass,',',csvFilePath);
     }
 
     public int loadIndiaStateCodeData(String... csvFilePath){
-        return loadIndiaCensusData(IndiaCensusCSV.class,',',csvFilePath);
+        return loadIndiaStateCodeData(CSVStates.class,',',csvFilePath);
     }
 
     public String getStateWiseSortedCensusData() {
@@ -65,14 +62,14 @@ public class CensusAnalyser<E>{
     public String getPopulationWiseSortedCensusData() {
         checkIfNull(censusCSVMap);
         Comparator<CensusDAO> comparing = Comparator.comparing(census -> census.population);
-        ArrayList censusList= getSortedArray(comparing);
+        ArrayList censusList= getSortedArray(comparing.reversed());
         return new Gson().toJson(censusList);
     }
 
     public String getPopulationDensityWiseSortedCensusData() {
         checkIfNull(censusCSVMap);
         Comparator<CensusDAO> comparing = Comparator.comparing(census -> census.density);
-        ArrayList censusList= getSortedArray(comparing);
+        ArrayList censusList= getSortedArray(comparing.reversed());
         return new Gson().toJson(censusList);
     }
 
