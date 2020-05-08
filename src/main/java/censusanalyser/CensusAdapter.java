@@ -19,8 +19,7 @@ import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 public abstract class CensusAdapter {
-
-
+    public abstract <E> Map<String, CensusDAO> loadCensusData(TYPE type, char c, String... csvFilePath);
     public enum TYPE {
         INDIA,US,INDIA_STATE;
     }
@@ -61,7 +60,7 @@ public abstract class CensusAdapter {
     }
     public static void checkClass(Class censusCSVClass, Class usCensusCSVClass) {
         if(!censusCSVClass.equals(usCensusCSVClass)){
-            throw new CensusAnalyserException("Wrong Type of Delimiter",CensusAnalyserException.ExceptionType.CENSUS_TYPE_PROBLEM);
+            throw new CensusAnalyserException("Wrong Type of Class",CensusAnalyserException.ExceptionType.CENSUS_TYPE_PROBLEM);
         }
     }
 

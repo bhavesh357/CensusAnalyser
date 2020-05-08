@@ -11,7 +11,8 @@ public class OpenCSVBuilder <E> implements ICSVBuilder {
     @Override
     public Iterator getCSVFileIterator(Reader reader, Class csvStatesClass){
         try{
-            return getCsvToBean(reader,csvStatesClass).iterator();
+            CsvToBean csvToBean = getCsvToBean(reader, csvStatesClass);
+            return csvToBean.iterator();
         }catch (Exception e){
             throw new CSVBuilderException(e.getMessage(),CSVBuilderException.ExceptionType.CENSUS_HEADER_PROBLEM);
         }
@@ -19,11 +20,12 @@ public class OpenCSVBuilder <E> implements ICSVBuilder {
 
     private CsvToBean getCsvToBean(Reader reader, Class className) {
         try{
-            return (CsvToBean) new CsvToBeanBuilder<>(reader)
+            CsvToBean build = new CsvToBeanBuilder<>(reader)
                     .withType(className)
                     .withIgnoreLeadingWhiteSpace(true)
                     .withSeparator(',')
                     .build();
+            return build;
         }catch (RuntimeException e){
             throw new CSVBuilderException(e.getMessage(),CSVBuilderException.ExceptionType.CENSUS_HEADER_PROBLEM);
         }
